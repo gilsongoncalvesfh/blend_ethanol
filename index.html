@@ -6,105 +6,22 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Calculadora de Blend Etanol</title>
   <style>
-    * {
-      box-sizing: border-box;
-    }
-
-    body {
-      font-family: Arial, sans-serif;
-      background: #f4f4f4;
-      margin: 0;
-      padding: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 100vh;
-    }
-
-    .container {
-      background: white;
-      padding: 24px;
-      border-radius: 12px;
-      box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-      width: 100%;
-      max-width: 420px;
-      margin: 20px;
-    }
-
-    h2 {
-      text-align: center;
-      margin-bottom: 20px;
-      font-size: 1.5rem;
-    }
-
-    label {
-      display: block;
-      margin-top: 15px;
-      font-size: 1rem;
-    }
-
-    input {
-      width: 100%;
-      padding: 10px;
-      margin-top: 5px;
-      font-size: 1rem;
-      border-radius: 6px;
-      border: 1px solid #ccc;
-    }
-
-    button {
-      margin-top: 20px;
-      width: 100%;
-      padding: 12px;
-      font-size: 1rem;
-      background: #007bff;
-      border: none;
-      color: white;
-      font-weight: bold;
-      border-radius: 6px;
-      cursor: pointer;
-      transition: background 0.2s ease;
-    }
-
-    button:hover {
-      background: #0056b3;
-    }
-
-    .result {
-      margin-top: 20px;
-      padding: 15px;
-      background: #e9f5e9;
-      border-left: 4px solid #28a745;
-      font-size: 1rem;
-      border-radius: 6px;
-    }
-
-    @media (max-width: 480px) {
-      h2 {
-        font-size: 1.3rem;
-      }
-
-      input,
-      button {
-        font-size: 0.95rem;
-        padding: 10px;
-      }
-
-      .result {
-        font-size: 0.95rem;
-      }
-    }
+    /* ... mesmo estilo anterior ... */
   </style>
 </head>
 
 <body>
   <div class="container">
     <h2>Calculadora de Blend Etanol</h2>
+    
     <label for="litros">Litros totais:</label>
     <input type="number" id="litros" placeholder="Ex: 50">
 
     <label for="percentual">Porcentagem de álcool desejada (%):</label>
     <input type="number" id="percentual" placeholder="Ex: 70">
+
+    <label for="alcoolGasolina">Percentual de álcool na gasolina (%):</label>
+    <input type="number" id="alcoolGasolina" placeholder="Ex: 27" value="27">
 
     <button onclick="calcular()">Calcular</button>
 
@@ -115,21 +32,24 @@
     function calcular() {
       const litros = parseFloat(document.getElementById('litros').value);
       const percentual = parseFloat(document.getElementById('percentual').value);
+      const alcoolGasolina = parseFloat(document.getElementById('alcoolGasolina').value);
 
-      if (isNaN(litros) || isNaN(percentual)) {
+      if (isNaN(litros) || isNaN(percentual) || isNaN(alcoolGasolina)) {
         alert('Por favor, preencha todos os campos corretamente.');
         return;
       }
 
       const percentualAlcool = percentual / 100;
+      const percentualGasolina = alcoolGasolina / 100;
+
       const alcoolTotal = litros * percentualAlcool;
 
-      const gasolina = (alcoolTotal - litros) / (0.27 - 1);
+      const gasolina = (alcoolTotal - litros) / (percentualGasolina - 1);
 
       if (gasolina < 0 || gasolina > litros) {
         document.getElementById('resultado').style.display = 'block';
         document.getElementById('resultado').innerHTML = `
-          <strong>Não é possível atingir essa mistura com gasolina 27%.</strong>
+          <strong>Não é possível atingir essa mistura com gasolina com ${alcoolGasolina}% de álcool.</strong>
         `;
         return;
       }
@@ -139,7 +59,7 @@
       document.getElementById('resultado').style.display = 'block';
       document.getElementById('resultado').innerHTML = `
         Para <strong>${litros.toFixed(2)}L</strong> com <strong>${percentual}%</strong> de álcool:<br><br>
-        ➤ <strong>${gasolina.toFixed(2)}L</strong> de gasolina (com 27% de álcool)<br>
+        ➤ <strong>${gasolina.toFixed(2)}L</strong> de gasolina (com ${alcoolGasolina}% de álcool)<br>
         ➤ <strong>${alcool.toFixed(2)}L</strong> de álcool puro
       `;
     }
